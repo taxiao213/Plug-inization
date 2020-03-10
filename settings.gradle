@@ -1,2 +1,2 @@
-include ':app'
+include ':app', ':standar', ':plug_package'
 rootProject.name='PlugInization'
