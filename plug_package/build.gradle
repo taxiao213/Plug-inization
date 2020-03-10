@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-def support = rootProject.ext.dependencies
+
 android {
     compileSdkVersion rootProject.compileSdkVersion
     buildToolsVersion rootProject.buildToolsVersion
@@ -22,5 +22,5 @@ android {
 
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
-    support.each { k, v -> api v }
+    implementation project(':standar')
 }
