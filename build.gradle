@@ -1,0 +1,34 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+apply from: "config.gradle"
+buildscript {
+    repositories {
+        // 超级实用：某某影响，很多被墙，强烈推荐阿里云镜像更新
+        maven {
+            url "http://maven.aliyun.com/nexus/content/groups/public/"
+        }
+        google()
+        jcenter()
+        
+    }
+    dependencies {
+        classpath "com.android.tools.build:gradle:${String.valueOf(BUILD_GRADLE_VERSION)}"
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        // 超级实用：某某影响，很多被墙，强烈推荐阿里云镜像更新
+        maven {
+            url "http://maven.aliyun.com/nexus/content/groups/public/"
+        }
+        google()
+        jcenter()
+        
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

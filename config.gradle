@@ -1,0 +1,59 @@
+ext {
+    // Sdk and tools
+    minSdkVersion = 19
+    targetSdkVersion = 28
+    compileSdkVersion = 28
+    buildToolsVersion = '28.0.0'
+    versionCode = 1
+    versionName = '1.0'
+
+    // App dependencies
+    supportLibraryVersion = '28.0.0'
+    constraintLayoutVersion = '1.1.3'
+    junitVersion = '4.12'
+    gsonVersion = '2.8.0'
+
+    //rxjava retrofit2
+    okhttp3Version = '3.9.0'
+    retrofit2Version = '2.3.0'
+    rxjava2JavaVersion = '2.1.3'
+    rxjava2AndroidVersion = '2.0.1'
+
+    //database
+    databaseSqlcipherVersion = '3.5.9@aar'
+    greendaoVersion = '3.2.2'
+
+    //bugly 其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.1.9
+    buglyVersion = 'latest.release'
+
+    //umeng PushSDK必须依赖基础组件库，PushSDK必须依赖utdid库，
+    umengCommonVersion = '1.5.4'
+    umengUtdidVersion = '1.1.5.3'
+    umengPushVersion = '5.0.2'
+
+    //华为push
+    hmsPushVersion = '2.6.0.301'
+
+    //Permission
+    xxpermissionsVersion = '5.0'
+
+    //zxing
+    zxingCoreVersion = '3.3.0'
+
+    //view
+    butterknifeVersion = '8.8.1'
+    glideVersion = '4.8.0'
+    SuperCalendarVersion = '1.6'
+    matisseVersion = '0.4.3'
+    AppManagerVersion = '1.0.1'
+    photoviewVersion = '1.2.4'
+
+    dependencies = [
+            "appcompat"       : "com.android.support:appcompat-v7:${supportLibraryVersion}",
+            "constraintLayout": "com.android.support.constraint:constraint-layout:${constraintLayoutVersion}"
+    ]
+
+    // 包名，用于存放APT生成的类文件
+    packageNameForAPT = "com.plug.inization.apt"
+
+}
