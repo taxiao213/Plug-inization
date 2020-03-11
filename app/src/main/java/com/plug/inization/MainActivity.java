@@ -10,6 +10,8 @@ import android.view.View;
 
 import com.plug.inization.base.PluginManager;
 import com.plug.inization.base.ProxyActivity;
+import com.plug.inization.base.ProxyService;
+import com.plug.standar.Constant;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         View load = findViewById(R.id.load);
         View plug = findViewById(R.id.plug);
+        View loadService = findViewById(R.id.load_service);
         load.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -30,6 +33,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startPlugActivity();
+            }
+        });
+
+        loadService.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadService();
             }
         });
     }
@@ -48,7 +58,13 @@ public class MainActivity extends AppCompatActivity {
         ActivityInfo activity = info.activities[0];
         // 占位 代理Activity
         Intent intent = new Intent(this, ProxyActivity.class);
-        intent.putExtra("className", activity.name);
+        intent.putExtra(Constant.CLASS_NAME, activity.name);
         startActivity(intent);
     }
+
+    // 加载Service
+    private void loadService() {
+        startService(new Intent(this, ProxyService.class));
+    }
+
 }

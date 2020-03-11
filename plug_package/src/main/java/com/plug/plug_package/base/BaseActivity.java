@@ -2,16 +2,19 @@ package com.plug.plug_package.base;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.plug.standar.ActivityInterface;
+import com.plug.standar.Constant;
 
 import java.util.Objects;
 
 /**
+ * 插件BaseActivity
  * Created by A35 on 2020/3/10
  * Email:yin13753884368@163.com
  * CSDN:http://blog.csdn.net/yin13753884368/article
@@ -45,6 +48,12 @@ public class BaseActivity extends AppCompatActivity implements ActivityInterface
         return null;
     }
 
+    // 注入宿主 Activity
+    @Override
+    public void insertAppContext(Activity appActivity) {
+        this.mActivity = appActivity;
+    }
+
     /**
      * 插件内Activity跳转
      *
@@ -53,14 +62,19 @@ public class BaseActivity extends AppCompatActivity implements ActivityInterface
     @Override
     public void startActivity(Intent intent) {
         Intent intentNew = new Intent();
-        intentNew.putExtra("className", Objects.requireNonNull(intent.getComponent()).getClassName());
+        intentNew.putExtra(Constant.CLASS_NAME, Objects.requireNonNull(intent.getComponent()).getClassName());
         // 调用 com.plug.inization.base.ProxyActivity 宿主的startActivity()
         mActivity.startActivity(intentNew);
     }
 
+    // 宿主的Service开启startService
     @Override
-    public void insertAppContext(Activity appActivity) {
-        this.mActivity = appActivity;
+    public ComponentName startService(Intent service) {
+        // 传入新生成的Intent
+        Intent intentNew = new Intent();
+        intentNew.putExtra(Constant.CLASS_NAME, Objects.requireNonNull(service.getComponent()).getClassName());
+        // 调用 com.plug.inization.base.ProxyActivity 宿主的startService()
+        return mActivity.startService(intentNew);
     }
 
     @SuppressLint("MissingSuperCall")

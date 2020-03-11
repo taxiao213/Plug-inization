@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 
 /**
- * 标准
+ * Activity标准
  * Created by A35 on 2020/3/10
  * Email:yin13753884368@163.com
  * CSDN:http://blog.csdn.net/yin13753884368/article

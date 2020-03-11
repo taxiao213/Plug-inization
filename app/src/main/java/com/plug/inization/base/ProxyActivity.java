@@ -1,13 +1,16 @@
 package com.plug.inization.base;
 
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.plug.standar.ActivityInterface;
+import com.plug.standar.Constant;
 
 import java.lang.reflect.Constructor;
 
@@ -33,14 +36,17 @@ public class ProxyActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(">>>", " ProxyActivity --- onCreate");
         // 真正的加载 插件里面的 Activity
-        String className = getIntent().getStringExtra("className");
+        String className = getIntent().getStringExtra(Constant.CLASS_NAME);
         try {
             Class mPluginActivityClass = getClassLoader().loadClass(className);
             // 实例化 插件包里面的 Activity
-            Constructor constructor = mPluginActivityClass.getConstructor(new Class[]{});
-            Object mPluginActivity = constructor.newInstance(new Object[]{});
-            ActivityInterface activityInterface = (ActivityInterface) mPluginActivity;
+//            Constructor constructor = mPluginActivityClass.getConstructor(new Class[]{});
+//            Object mPluginActivity = constructor.newInstance(new Object[]{});
+//            ActivityInterface activityInterface = (ActivityInterface) mPluginActivity;
+
+            ActivityInterface activityInterface = (ActivityInterface) mPluginActivityClass.newInstance();
             // 注入环境
             activityInterface.insertAppContext(this);
             Bundle bundle = new Bundle();
@@ -54,11 +60,22 @@ public class ProxyActivity extends AppCompatActivity {
 
     @Override
     public void startActivity(Intent intent) {
+        Log.d(">>>", " ProxyActivity --- startActivity");
         // 插件com.plug.plug_package.PlugMainActivity 跳转com.plug.plug_package.TestActivity 到这
-        String className = intent.getStringExtra("className");// 获取类名
+        String className = intent.getStringExtra(Constant.CLASS_NAME);// 获取类名
         Intent intentProxy = new Intent(this, ProxyActivity.class);
-        intentProxy.putExtra("className", className);
+        intentProxy.putExtra(Constant.CLASS_NAME, className);
         // 要给TestActivity 进栈 调用父类的startActivity
         super.startActivity(intentProxy);
+    }
+
+    @Override
+    public ComponentName startService(Intent service) {
+        String className = service.getStringExtra(Constant.CLASS_NAME);// 获取类名
+        Intent intentProxy = new Intent(this, ProxyService.class);
+        intentProxy.putExtra(Constant.CLASS_NAME, className);
+        // 要给TestService 进栈 调用父类的startService
+        Log.d(">>>", " ProxyActivity --- startService " + className);
+        return super.startService(intentProxy);
     }
 }

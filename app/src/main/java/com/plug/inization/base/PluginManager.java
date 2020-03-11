@@ -76,7 +76,7 @@ public class PluginManager {
      * @return
      */
     public File getPlugFile() {
-        return new File(Environment.getExternalStorageDirectory() + File.separator + "plug.apk");
+        return new File(Environment.getExternalStorageDirectory() + File.separator + "plug_package-debug.apk");
     }
 
     /**

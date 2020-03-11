@@ -22,6 +22,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".base.ProxyActivity" />
+
+        <service android:name=".base.ProxyService" />
     </application>
 
 </manifest>

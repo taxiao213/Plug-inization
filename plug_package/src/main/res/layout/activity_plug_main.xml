@@ -13,9 +13,16 @@
         android:text="我是插件" />
 
     <TextView
-        android:id="@+id/jump"
+        android:id="@+id/jump_activity"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:gravity="center"
-        android:text="跳转" />
+        android:text="跳转内部activity" />
+
+    <TextView
+        android:id="@+id/jump_service"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:text="跳转内部service" />
 </LinearLayout>

@@ -16,11 +16,22 @@ public class PlugMainActivity extends BaseActivity {
         setContentView(R.layout.activity_plug_main);
         // this 会报错，因为插件没有安装，也没有组件的环境，所以必须使用宿主环境
         Toast.makeText(mActivity, "我是插件", Toast.LENGTH_SHORT).show();
-        findViewByID(R.id.jump).setOnClickListener(new View.OnClickListener() {
+
+        // 跳转内部activity
+        findViewByID(R.id.jump_activity).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // 插件内的类跳转，需要依赖宿主环境
                 startActivity(new Intent(mActivity, TestActivity.class));
+            }
+        });
+
+        // 跳转内部service
+        findViewByID(R.id.jump_service).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 插件内的类跳转，需要依赖宿主环境
+                startService(new Intent(mActivity, TestService.class));
             }
         });
     }
