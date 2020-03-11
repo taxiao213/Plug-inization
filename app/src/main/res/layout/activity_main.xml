@@ -33,4 +33,18 @@
         android:layout_height="50dp"
         android:gravity="center"
         android:text="加载service" />
+
+    <TextView
+        android:id="@+id/register_receiver"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:text="注册静态广播" />
+
+    <TextView
+        android:id="@+id/send_receiver"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:text="发送广播" />
 </LinearLayout>

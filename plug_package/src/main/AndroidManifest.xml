@@ -19,6 +19,11 @@
             </intent-filter>
         </activity>
         <!-- 插件里面不用配置Activity-->
+        <receiver android:name=".TestBroadcast">
+            <intent-filter>
+                <action android:name="com.plug.standar.register" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

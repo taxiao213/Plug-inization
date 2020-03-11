@@ -1,0 +1,83 @@
+宿主（运行的APP）
+
+标准
+
+实现宿主提供的标准
+插件包（不能运行的apk文件）
+
+------
+标准的制定（组件的管理）
+Activity
+
+插件的特点：插件是没有组件的环境
+
+1.标准ok
+2.加载插件（2.1 Activity class，  2.2layout）
+
+1.静态注册的广播
+在开机的时候，所有的App，再进行安装一遍，系统会去解析AndroidManifest.xml，解析静态广播后，就会去注册
+
+2.我们分析 安装
+data/app    安装包目录
+data/data/包名/   应用所属目录
+/data/local/tmp/dalvik-cache    虚拟机加载执行指令
+
+手机开机安装app的时候，安装 过后 就会全盘扫描 data/app  目录
+解析出 app.apk 文件，里面所有的组件，包括权限 系统会去解析AndroidManifest.xml，如果有静态广播 就会去注册广播
+
+分析系统源码PackageManagerService
+
+Linux内核驱动 >>> init进程 >>> zygote进程孵化 >>> SystemServer >>> PackageManagerService启动
+
+源码分析：SDK 28 Android9.0
+PackageManagerService类分析
+2305行 --  public static PackageManagerService main(Context context, Installer installer, boolean factoryTest, boolean onlyCore)
+
+2311行 --  PackageManagerService m = new PackageManagerService(context, installer, factoryTest, onlyCore);
+
+找到 扫描的目录 data/app
+2856行 --  private static final File sAppInstallDir =  new File(Environment.getDataDirectory(), "app");
+2973行 --  scanPackageTracedLI(scanFile, reparseFlags, rescanFlags, 0, null);
+
+8563行 --  PackageParser.Package scanPackageLI(File scanFile, int parseFlags, int scanFlags, long currentTime, UserHandle user)
+8575行 --  pkg = pp.parsePackage(scanFile, parseFlags); // 解析package
+
+PackageParser类分析
+解析 apk 文件里面的所有信息
+1033行 --  public Package parsePackage(File packageFile, int flags)
+
+6193行 --  PackageParser.Package
+
+Package --->  apk 里面的 AndroidManifest配置信息 （所有的）
+
+拿到了Package，就能拿到 静态的广播信息
+获取 receivers集合
+public final ArrayList<Activity> receivers = new ArrayList<Activity>(0);
+从 Activity 获取 IntentFilter
+    >>> public final static class Activity extends Component<ActivityIntentInfo> implements Parcelable
+        >>> public static abstract class Component<II extends IntentInfo>
+            >>> public static abstract class IntentInfo extends IntentFilter
+
+7057行 -- public static abstract class Component<II extends IntentInfo>
+
+// UserHandle类 返回userId
+// public static @UserIdInt int getCallingUserId() {
+//     return getUserId(Binder.getCallingUid());
+// }
+获取 ActivityInfo 得到类注册路径
+7619行 -- public static final ActivityInfo generateActivityInfo(Activity a, int flags,PackageUserState state, int userId)
+
+    PackageItemInfo
+    /**
+     * Public name of this item. From the "android:name" attribute.
+     */
+    public String name;
+
+最终的目标：
+<!-- 静态注册的广播 -->
+<receiver android:name=".StaticReceiver">
+   <intent-filter>
+        <action android:name="plugin.static_receiver" />
+   </intent-filter>
+</receiver>
+

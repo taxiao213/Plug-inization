@@ -22,6 +22,8 @@ public class MainActivity extends AppCompatActivity {
         View load = findViewById(R.id.load);
         View plug = findViewById(R.id.plug);
         View loadService = findViewById(R.id.load_service);
+        View registerReceiver = findViewById(R.id.register_receiver);
+        View sendReceiver = findViewById(R.id.send_receiver);
         load.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -40,6 +42,19 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 loadService();
+            }
+        });
+
+        registerReceiver.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                registerReceiver();
+            }
+        });
+        sendReceiver.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendReceiver();
             }
         });
     }
@@ -67,4 +82,15 @@ public class MainActivity extends AppCompatActivity {
         startService(new Intent(this, ProxyService.class));
     }
 
+    // 注册静态服务
+    private void registerReceiver() {
+        PluginManager.getInstance(this).parserApk();
+    }
+
+    // 发送广播
+    private void sendReceiver() {
+        Intent intent = new Intent();
+        intent.setAction(Constant.BROADCAST_ACTION);
+        sendBroadcast(intent);
+    }
 }
