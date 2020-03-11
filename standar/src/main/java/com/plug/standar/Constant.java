@@ -7,5 +7,7 @@ package com.plug.standar;
  * Github:https://github.com/taxiao213
  */
 public class Constant {
-    public static final String CLASS_NAME="className";
+    public static final String CLASS_NAME = "className";
+
+    public static final String BROADCAST_ACTION = "com.plug.standar.register";
 }

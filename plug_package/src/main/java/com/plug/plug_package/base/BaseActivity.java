@@ -2,10 +2,13 @@ package com.plug.plug_package.base;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 
 import com.plug.standar.ActivityInterface;
@@ -75,6 +78,19 @@ public class BaseActivity extends AppCompatActivity implements ActivityInterface
         intentNew.putExtra(Constant.CLASS_NAME, Objects.requireNonNull(service.getComponent()).getClassName());
         // 调用 com.plug.inization.base.ProxyActivity 宿主的startService()
         return mActivity.startService(intentNew);
+    }
+
+    /**
+     * 发送广播
+     * @param intent
+     */
+    public void sendBroadcast(Intent intent) {
+        mActivity.sendBroadcast(intent);
+    }
+
+    // 注册服务
+    public Intent registerReceiver(BroadcastReceiver receiver, IntentFilter filter) {
+        return mActivity.registerReceiver(receiver, filter);
     }
 
     @SuppressLint("MissingSuperCall")

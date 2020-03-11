@@ -10,6 +10,7 @@ import com.plug.standar.Constant;
 import com.plug.standar.ServiceInterface;
 
 /**
+ * 代理的Service 代理/占位 插件里面的Service
  * Created by A35 on 2020/3/11
  * Email:yin13753884368@163.com
  * CSDN:http://blog.csdn.net/yin13753884368/article

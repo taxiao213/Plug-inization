@@ -24,6 +24,7 @@
         <activity android:name=".base.ProxyActivity" />
 
         <service android:name=".base.ProxyService" />
+        <receiver android:name=".base.ProxyBroadCast" />
     </application>
 
 </manifest>
