@@ -54,4 +54,18 @@
         android:layout_height="50dp"
         android:gravity="center"
         android:text="Hook" />
+
+    <Button
+        android:id="@+id/hook_jump_test"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:text="Hook 跳转TestActivity" />
+
+    <Button
+        android:id="@+id/hook_jump_test2"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:text="Hook 跳转TestActivity2" />
 </LinearLayout>

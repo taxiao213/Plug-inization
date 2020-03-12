@@ -22,7 +22,7 @@ import java.lang.reflect.Proxy;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button hook;
+    private View hook;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +34,9 @@ public class MainActivity extends AppCompatActivity {
         View registerReceiver = findViewById(R.id.register_receiver);
         View sendReceiver = findViewById(R.id.send_receiver);
         hook = findViewById(R.id.hook);
+        View hookJumpTest = findViewById(R.id.hook_jump_test);
+        View hookJumpTest2 = findViewById(R.id.hook_jump_test2);
+
         load.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         hook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, ((Button)v).getText(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, ((Button) v).getText(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -82,6 +85,20 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        hookJumpTest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hookJumpTest();
+            }
+        });
+
+        hookJumpTest2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hookJumpTest2();
+            }
+        });
     }
 
     public void loadPlug() {
@@ -170,5 +187,21 @@ public class MainActivity extends AppCompatActivity {
         * */
         // 把系统的 mOnClickListener  换成 我们自己写的 动态代理
         mOnClickListener.set(invoke, proxyInstance);
+    }
+
+    /**
+     * 不在AndroidManifest注册  使用动态代理技术 跳转此类
+     */
+    private void hookJumpTest() {
+        Intent intent = new Intent(this, HookTestActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * 不在AndroidManifest注册  使用动态代理技术 跳转此类
+     */
+    private void hookJumpTest2() {
+        Intent intent = new Intent(this, HookTest2Activity.class);
+        startActivity(intent);
     }
 }

@@ -22,7 +22,7 @@ Activity
 2.我们分析 安装
 data/app    安装包目录
 data/data/包名/   应用所属目录
-/data/local/tmp/dalvik-cache    虚拟机加载执行指令
+/data/dalvik-cache    虚拟机加载执行指令
 
 手机开机安装app的时候，安装 过后 就会全盘扫描 data/app  目录
 解析出 app.apk 文件，里面所有的组件，包括权限 系统会去解析AndroidManifest.xml，如果有静态广播 就会去注册广播
