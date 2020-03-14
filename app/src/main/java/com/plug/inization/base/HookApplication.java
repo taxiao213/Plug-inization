@@ -1,8 +1,14 @@
 package com.plug.inization.base;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
+import android.content.res.Resources;
 import android.os.Build;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
@@ -11,13 +17,20 @@ import android.util.Log;
 import com.plug.inization.HooKProxyActivity;
 import com.plug.inization.HookTestActivity;
 import com.plug.inization.PermissionActivity;
+import com.plug.standar.Constant;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
+
+import dalvik.system.DexClassLoader;
+import dalvik.system.PathClassLoader;
 
 /**
  * 使用hook技术 动态代理 跳转没有注册的类
@@ -30,11 +43,16 @@ public class HookApplication extends Application {
     public final int TARGET_SDK = 26;
     public static final int LAUNCH_ACTIVITY = 100;
     public static final int EXECUTE_TRANSACTION = 159;
+    private final static String ADD_ASSET_PATH = "addAssetPath"; // 添加资源的方法名称 AssetManager 356行
     public static ArrayList<String> classArrayList = new ArrayList<>();
 
     static {
         classArrayList.add(HookTestActivity.class.getName());
+        classArrayList.add("com.plug.plug_package.TestActivity2");
     }
+
+    private Resources plugResources;
+    private AssetManager assetManager;
 
     @Override
     public void onCreate() {
@@ -60,6 +78,118 @@ public class HookApplication extends Application {
             e.printStackTrace();
             Log.d(">>>", "hookLuanchActivity 失败 e:" + e.toString());
         }
+
+        try {
+            hookFusionClassLoader();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.d(">>>", "hookLuanchActivity 失败 e:" + e.toString());
+        }
+    }
+
+    /**
+     * 将宿主和插件包的ClassLoader融合在一块
+     * SDK 21-28 都兼容
+     */
+    private void hookFusionClassLoader() throws Exception {
+        // 第一步：找到宿主 dexElements 得到此对象     PathClassLoader代表是宿主
+        // 本质就是PathClassLoader
+        PathClassLoader hostPathClassLoader = (PathClassLoader) this.getClassLoader();
+        // BaseDexClassLoader.java  找到private final DexPathList pathList; Class c = pathList.findClass(name, suppressedExceptions);
+        Class<?> hostBaseDexClassLoaderClass = Class.forName("dalvik.system.BaseDexClassLoader");
+        // private final DexPathList pathList;
+        Field hostBaseDexClassLoaderField = hostBaseDexClassLoaderClass.getDeclaredField("pathList");
+        hostBaseDexClassLoaderField.setAccessible(true);
+        Object hostPathList = hostBaseDexClassLoaderField.get(hostPathClassLoader);
+        // private Element[] dexElements;
+        Field hostDexElementsField = hostPathList.getClass().getDeclaredField("dexElements");
+        hostDexElementsField.setAccessible(true);
+        Object hostDexElements = hostDexElementsField.get(hostPathList);
+
+        // 第二步：找到插件 dexElements 得到此对象，代表插件 DexClassLoader--代表插件
+        File plugFile = getDir("plug", Context.MODE_PRIVATE);
+        File plugFileAPK = PluginManager.getInstance(this).getPlugFile();
+        if (!plugFileAPK.exists()) {
+            throw new FileNotFoundException("插件包找不到");
+        }
+        DexClassLoader plugPathClassLoader = new DexClassLoader(plugFileAPK.getAbsolutePath(), plugFile.getAbsolutePath(), null, hostPathClassLoader);
+        // BaseDexClassLoader.java  找到private final DexPathList pathList; Class c = pathList.findClass(name, suppressedExceptions);
+        Class<?> plugBaseDexClassLoaderPlugClass = Class.forName("dalvik.system.BaseDexClassLoader");
+        // private final DexPathList pathList;
+        Field plugBaseDexClassLoaderPlugField = plugBaseDexClassLoaderPlugClass.getDeclaredField("pathList");
+        plugBaseDexClassLoaderPlugField.setAccessible(true);
+        Object pulgPathList = plugBaseDexClassLoaderPlugField.get(plugPathClassLoader);
+        // private Element[] dexElements;
+        Field plugDexElementstField = pulgPathList.getClass().getDeclaredField("dexElements");
+        plugDexElementstField.setAccessible(true);
+        Object plugDexElements = plugDexElementstField.get(pulgPathList);
+
+        // 第三步：创建出 新的 newDexElements []，类型必须是Element，必须是数组对象
+        int hostLength = Array.getLength(hostDexElements);
+        int plugLength = Array.getLength(plugDexElements);
+        int sumLength = hostLength + plugLength;
+        // 参数一：int[]  String[] ...  我们需要Element[]
+        // 参数二：数组对象的长度
+        // 本质就是 Element[] newDexElements
+        // 创建数组对象
+        Object newDexElements = Array.newInstance(hostDexElements.getClass().getComponentType(), sumLength);
+
+        // 第四步：宿主dexElements + 插件dexElements =----> 融合  新的 newDexElements 赋值
+        for (int i = 0; i < sumLength; i++) {
+            // 先融合宿主
+            if (i < hostLength) {
+                // 参数一：新要融合的容器 -- newDexElements
+                Array.set(newDexElements, i, Array.get(hostDexElements, i));
+            } else {
+                // 再融合插件的
+                Array.set(newDexElements, i, Array.get(plugDexElements, i - hostLength));
+            }
+        }
+
+        // 第五步：把新的 newDexElements，设置到宿主中去
+        hostDexElementsField.set(hostPathList, newDexElements);
+
+        // 处理加载插件中的布局
+        doPluginLayoutLoad();
+    }
+
+    /**
+     * 处理加载插件中的布局
+     * Resources
+     */
+    private void doPluginLayoutLoad() throws Exception {
+        File file = PluginManager.getInstance(this).getPlugFile();
+        if (!file.exists()) {
+            Log.e(">>>", "Error skinPath not exist...");
+        }
+        try {
+            assetManager = AssetManager.class.newInstance();
+            // 由于AssetManager中的addAssetPath和setApkAssets方法都被@hide，目前只能通过反射去执行方法
+            Method addAssetPath = assetManager.getClass().getDeclaredMethod(ADD_ASSET_PATH, String.class);
+            // 设置私有方法可访问
+            addAssetPath.setAccessible(true);
+            // addAssetPath
+            addAssetPath.invoke(assetManager, file.getAbsolutePath());
+            // 创建外部的资源包
+            Resources hostResources = getResources();
+            // 实例化此方法 final StringBlock[] ensureStringBlocks() , StringBlock[] 会加载资源xml文件
+            Method ensureStringBlocksMethod = assetManager.getClass().getDeclaredMethod("ensureStringBlocks");
+            ensureStringBlocksMethod.setAccessible(true);
+            ensureStringBlocksMethod.invoke(assetManager); // 执行了ensureStringBlocks  string.xml  color.xml   anim.xml 被初始化
+            plugResources = new Resources(assetManager, hostResources.getDisplayMetrics(), hostResources.getConfiguration());
+        } catch (Exception e) {
+
+        }
+    }
+
+    @Override
+    public Resources getResources() {
+        return plugResources == null ? super.getResources() : plugResources;
+    }
+
+    @Override
+    public AssetManager getAssets() {
+        return assetManager == null ? super.getAssets() : assetManager;
     }
 
     private void hookAmsAction() throws Exception {
@@ -241,7 +371,7 @@ public class HookApplication extends Application {
         // 获取 Handler.Callback 重写Callback
         Field mCallback = Handler.class.getDeclaredField("mCallback");
         mCallback.setAccessible(true);
-        mCallback.set(handler,new MyCallback26(handler));
+        mCallback.set(handler, new MyCallback26(handler));
     }
 
     public class MyCallback26 implements Handler.Callback {
@@ -254,7 +384,7 @@ public class HookApplication extends Application {
         @Override
         public boolean handleMessage(Message msg) {
             switch (msg.what) {
-                case EXECUTE_TRANSACTION:{
+                case EXECUTE_TRANSACTION: {
                     Object obj = msg.obj;
                     Log.d(">>>", " LAUNCH_ACTIVITY ");
                    /*

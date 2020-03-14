@@ -1,71 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".MainActivity">
+    android:scrollbars="vertical">
 
-    <TextView
+    <LinearLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:gravity="center"
-        android:text="宿主" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/load"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:gravity="center"
-        android:text="加载插件" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:text="宿主" />
 
-    <TextView
-        android:id="@+id/plug"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:gravity="center"
-        android:text="跳转插件Activity" />
+        <TextView
+            android:id="@+id/load"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:text="加载插件" />
 
-    <TextView
-        android:id="@+id/load_service"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:gravity="center"
-        android:text="加载service" />
+        <TextView
+            android:id="@+id/plug"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:text="跳转插件Activity" />
 
-    <TextView
-        android:id="@+id/register_receiver"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:gravity="center"
-        android:text="注册静态广播" />
+        <TextView
+            android:id="@+id/load_service"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:text="加载service" />
 
-    <TextView
-        android:id="@+id/send_receiver"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:gravity="center"
-        android:text="发送广播" />
+        <TextView
+            android:id="@+id/register_receiver"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:text="注册静态广播" />
 
-    <Button
-        android:id="@+id/hook"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:gravity="center"
-        android:text="Hook" />
+        <TextView
+            android:id="@+id/send_receiver"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:text="发送广播" />
 
-    <Button
-        android:id="@+id/hook_jump_test"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:gravity="center"
-        android:text="Hook 跳转TestActivity" />
+        <Button
+            android:id="@+id/hook"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:text="Hook" />
 
-    <Button
-        android:id="@+id/hook_jump_test2"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:gravity="center"
-        android:text="Hook 跳转TestActivity2" />
-</LinearLayout>
+        <Button
+            android:id="@+id/hook_jump_test"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:text="Hook 跳转TestActivity" />
+
+        <Button
+            android:id="@+id/hook_jump_test2"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:text="Hook 跳转TestActivity2" />
+
+        <Button
+            android:id="@+id/hook_jump_plug_test"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:text="Hook 跳转插件TestActivity" />
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>

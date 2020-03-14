@@ -35,7 +35,29 @@ startActivity --->  TestActivity -- （Hook ProxyActivity）（AMS）检测，�
        return sCurrentActivityThread;
     }
 
-Hook LAUNCH_ACTIVITY
+Hook 适配 SDK = 25 前后
+Android7.0 ,SDK = 25 之前    LAUNCH_ACTIVITY
+case LAUNCH_ACTIVITY: {
+    Trace.traceBegin(Trace.TRACE_TAG_ACTIVITY_MANAGER, "activityStart");
+    final ActivityClientRecord r = (ActivityClientRecord) msg.obj;
+
+    r.packageInfo = getPackageInfoNoCheck(
+            r.activityInfo.applicationInfo, r.compatInfo);
+    handleLaunchActivity(r, null, "LAUNCH_ACTIVITY");
+    Trace.traceEnd(Trace.TRACE_TAG_ACTIVITY_MANAGER);
+} break;
+
+SDK = 25 之后 Android9.0 ,SDK = 28 EXECUTE_TRANSACTION
+case EXECUTE_TRANSACTION:
+final ClientTransaction transaction = (ClientTransaction) msg.obj;
+mTransactionExecutor.execute(transaction);
+if (isSystem()) {
+    // Client transactions inside system process are recycled on the client side
+    // instead of ClientLifecycleManager to avoid being cleared before this
+    // message is handled.
+    transaction.recycle();
+}
+break;
 
 我们要在Handler.handleMessage 之前执行，就是为了(要把这个ProxyActivity 换回来 --> TestActivity)，所有需要Hook
 

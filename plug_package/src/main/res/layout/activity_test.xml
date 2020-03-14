@@ -9,5 +9,5 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:gravity="center"
-        android:text="我是测试类" />
+        android:text="我是插件包测试类" />
 </LinearLayout>

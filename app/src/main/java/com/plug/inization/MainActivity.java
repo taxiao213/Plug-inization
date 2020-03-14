@@ -1,5 +1,6 @@
 package com.plug.inization;
 
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         hook = findViewById(R.id.hook);
         View hookJumpTest = findViewById(R.id.hook_jump_test);
         View hookJumpTest2 = findViewById(R.id.hook_jump_test2);
+        View hookJumpPlugTest = findViewById(R.id.hook_jump_plug_test);
 
         load.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,6 +99,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 hookJumpTest2();
+            }
+        });
+
+        hookJumpPlugTest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hookJumpPlugTest();
             }
         });
     }
@@ -190,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * 不在AndroidManifest注册  使用动态代理技术 跳转此类
+     * 不在AndroidManifest注册  使用动态代理 跳转此类
      */
     private void hookJumpTest() {
         Intent intent = new Intent(this, HookTestActivity.class);
@@ -198,10 +207,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * 不在AndroidManifest注册  使用动态代理技术 跳转此类
+     * 不在AndroidManifest注册  使用动态代理 跳转此类
      */
     private void hookJumpTest2() {
         Intent intent = new Intent(this, HookTest2Activity.class);
         startActivity(intent);
     }
+
+    /**
+     * 跳转插件包的 类
+     */
+    private void hookJumpPlugTest() {
+        // 跳转插件包，因为插件包未依赖所以跳转需要携带包名
+        Intent TestActivity = new Intent();
+        TestActivity.setComponent(new ComponentName("com.plug.plug_package", "com.plug.plug_package.TestActivity2"));
+        startActivity(TestActivity);
+    }
+
 }
