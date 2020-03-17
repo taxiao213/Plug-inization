@@ -83,7 +83,7 @@ public class TransactionExecutor {
         log("Resolving callbacks");
 
         final IBinder token = transaction.getActivityToken();
-        ActivityClientRecord r = mTransactionHandler.getActivityClient(token);
+        ActivityClientRecord r = execute.getActivityClient(token);
 
         // In case when post-execution state of the last callback matches the final state requested
         // for the activity in this transaction, we won't do the last transition here and do it when

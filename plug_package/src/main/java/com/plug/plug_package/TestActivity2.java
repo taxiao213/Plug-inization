@@ -16,26 +16,26 @@ import com.plug.plug_package.base.BaseActivity;
  * Github:https://github.com/taxiao213
  */
 public class TestActivity2 extends Activity {
-    @Override
-    public Resources getResources() {
-        if (getApplication() != null && getApplication().getResources() != null) {
-            return getApplication().getResources();
-        }
-        return super.getResources();
-    }
-
-    @Override
-    public AssetManager getAssets() {
-        if (getApplication() != null && getApplication().getAssets() != null) {
-            return getApplication().getAssets();
-        }
-        return super.getAssets();
-    }
+//    @Override
+//    public Resources getResources() {
+//        if (getApplication() != null && getApplication().getResources() != null) {
+//            return getApplication().getResources();
+//        }
+//        return super.getResources();
+//    }
+//
+//    @Override
+//    public AssetManager getAssets() {
+//        if (getApplication() != null && getApplication().getAssets() != null) {
+//            return getApplication().getAssets();
+//        }
+//        return super.getAssets();
+//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
-        Toast.makeText(this, "我是插件包", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "我是插件包", Toast.LENGTH_SHORT).show();
     }
 }
