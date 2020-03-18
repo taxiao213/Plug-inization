@@ -16,6 +16,7 @@ import com.plug.inization.base.ProxyActivity;
 import com.plug.inization.base.ProxyService;
 import com.plug.standar.Constant;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         View hookJumpTest = findViewById(R.id.hook_jump_test);
         View hookJumpTest2 = findViewById(R.id.hook_jump_test2);
         View hookJumpPlugTest = findViewById(R.id.hook_jump_plug_test);
+        View jumpFixBug = findViewById(R.id.jump_fix_bug);
 
         load.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,6 +108,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 hookJumpPlugTest();
+            }
+        });
+
+        jumpFixBug.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                jumpFixBug();
             }
         });
     }
@@ -222,6 +231,14 @@ public class MainActivity extends AppCompatActivity {
         Intent TestActivity = new Intent();
         TestActivity.setComponent(new ComponentName("com.plug.plug_package", "com.plug.plug_package.TestActivity2"));
         startActivity(TestActivity);
+    }
+
+    /**
+     * 热修复
+     */
+    private void jumpFixBug() {
+        Intent intent = new Intent(this, FixBugActivity.class);
+        startActivity(intent);
     }
 
 }

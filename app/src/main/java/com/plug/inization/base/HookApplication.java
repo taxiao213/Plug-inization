@@ -458,12 +458,12 @@ public class HookApplication extends Application {
                         if (TextUtils.equals("startActivity", method.getName())) {
                             Intent intent = (Intent) args[2];
                             String className = intent.getComponent().getClassName();
-//                            if (classArrayList.contains(className)) {
-                            // 做自己的业务逻辑 换成 可以 通过 AMS检查的 ProxyActivity
-                            Intent proxyIntent = new Intent(HookApplication.this, HooKProxyActivity.class);
-                            proxyIntent.putExtra("actionIntent", intent);
-                            args[2] = proxyIntent;
-//                            }
+                            if (classArrayList.contains(className)) {
+                                // 做自己的业务逻辑 换成 可以 通过 AMS检查的 ProxyActivity
+                                Intent proxyIntent = new Intent(HookApplication.this, HooKProxyActivity.class);
+                                proxyIntent.putExtra("actionIntent", intent);
+                                args[2] = proxyIntent;
+                            }
                         }
                         return method.invoke(IActivityManager, args);
                     }
@@ -530,12 +530,12 @@ public class HookApplication extends Application {
                         if (TextUtils.equals("startActivity", method.getName())) {
                             Intent intent = (Intent) args[2];
                             String className = intent.getComponent().getClassName();
-//                            if (classArrayList.contains(className)) {
-                            // 做自己的业务逻辑 换成 可以 通过 AMS检查的 ProxyActivity
-                            Intent proxyIntent = new Intent(HookApplication.this, HooKProxyActivity.class);
-                            proxyIntent.putExtra("actionIntent", intent);
-                            args[2] = proxyIntent;
-//                            }
+                            if (classArrayList.contains(className)) {
+                                // 做自己的业务逻辑 换成 可以 通过 AMS检查的 ProxyActivity
+                                Intent proxyIntent = new Intent(HookApplication.this, HooKProxyActivity.class);
+                                proxyIntent.putExtra("actionIntent", intent);
+                                args[2] = proxyIntent;
+                            }
                         }
                         return method.invoke(getServiceManager, args);
                     }

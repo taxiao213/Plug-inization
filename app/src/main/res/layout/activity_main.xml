@@ -78,5 +78,12 @@
             android:layout_height="50dp"
             android:gravity="center"
             android:text="Hook 跳转插件TestActivity" />
+
+        <Button
+            android:id="@+id/jump_fix_bug"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:text="热修复测试类" />
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

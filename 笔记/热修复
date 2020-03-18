@@ -1,0 +1,20 @@
+引用第三方资源库，实现反射
+// https://mvnrepository.com/artifact/org.jooq/joor
+compile group: 'org.jooq', name: 'joor', version: '0.9.12'
+
+热修复原理
+1.基于MultiDex的Dex注入，如 Tinker,手Q空间，Nuwa
+原理：将补丁Dex对应的DexFile对象注入到系统的ClassLoader相关联的DexPathList对象的dexElements数组的最前面
+
+2.Native层方法替换，如 AndFix,阿里百川HotFix
+原理：在Native层对方法的整体数据结构（Method/ArtMethod）进行替换
+
+3.ClassLoader Hack，如 Instant Run
+原理：基于双亲委派机制，用自定义的  ClassLoader 加载补丁Dex,同时将该类加载器设置为系统类加载器的父加载器
+
+classLoader有一个核心的加载逻辑叫做双亲委托机制，讲人话就是：爹classLoader加载过某个类后，子classLoader遇到相同的类就不会再加载。
+对比我们上面的代码，也就是说一个ClassLoader可以包含多个dex文件，每个dex文件是一个Element，多个dex文件排列成一个有序的数组dexElements，当找类的时候，
+会按顺序遍历dex文件。然后从当前遍历的dex文件中找类，如果找到则返回，如果找不到从下一个dex文件继续查找。所以，如果在不同的dex中有相同的类存在，
+那么会优先选择排在前面的dex文件的类，而后面的就不会再被加载。也就是说，后面有bug的类被前面的“修复”了。没错，这就是QQ空间的方案，做一个patch.apk进行动态加载，
+然后优先加载patch中的类。
+

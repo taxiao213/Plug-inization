@@ -1,2 +1,2 @@
-include ':app', ':standar', ':plug_package'
+include ':app', ':standar', ':plug_package', ':fix_bug'
 rootProject.name='PlugInization'
