@@ -22,6 +22,7 @@ import android.util.Log;
 import com.plug.inization.HooKProxyActivity;
 import com.plug.inization.HookTestActivity;
 import com.plug.inization.PermissionActivity;
+import com.plug.inization.fix.FixUtils;
 import com.plug.standar.Constant;
 
 import java.io.File;
@@ -105,6 +106,9 @@ public class HookApplication extends Application {
             e.printStackTrace();
             Log.d(">>>", "customClassLoader 失败 e:" + e.toString());
         }
+
+        // TODO 热修复
+        FixUtils.getInstance().fixDex(getApplicationContext());
     }
 
     /**

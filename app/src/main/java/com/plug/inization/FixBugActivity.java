@@ -25,7 +25,6 @@ public class FixBugActivity extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FixUtils.getInstance().fixDex(FixBugActivity.this);
         setContentView(R.layout.activity_fix_bug);
         tvFixInfo = (TextView) findViewById(R.id.tv_fix_info);
         Button tvFixBut = (Button) findViewById(R.id.tv_fix_but);

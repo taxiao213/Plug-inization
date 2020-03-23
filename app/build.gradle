@@ -9,10 +9,16 @@ android {
         targetSdkVersion rootProject.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        // 热修复 开启分包
+//        multiDexEnabled true
     }
     buildTypes {
         release {
-            minifyEnabled false
+            // 不需要修复的类清单
+//            multiDexKeepFile file('dex.keep')
+//            def myFile = file('dex.keep')
+//            println("isFileExists:" + myFile.exists())
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
