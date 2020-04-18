@@ -1,12 +1,17 @@
 package com.plug.inization;
 
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -23,7 +28,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
 public class MainActivity extends AppCompatActivity {
-
+    private String TAG = getClass().getSimpleName();
     private View hook;
 
     @Override
@@ -117,6 +122,8 @@ public class MainActivity extends AppCompatActivity {
                 jumpFixBug();
             }
         });
+
+        getChannel(getApplicationContext());
     }
 
     public void loadPlug() {
@@ -241,4 +248,35 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    /**
+     * 渠道打包获取channel
+     *
+     * @param context
+     * @return
+     */
+    public String getChannel(Context context) {
+        String channel = "";
+        PackageManager packageManager = context.getPackageManager();
+        try {
+            if (packageManager != null) {
+                ApplicationInfo info = packageManager.getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
+                if (info != null) {
+                    Bundle metaData = info.metaData;
+                    if (metaData != null) {
+                        channel = metaData.getString("CHANNEL");
+                        // 渠道打包获取channel
+                        Log.e(TAG, "channel -- " + channel);
+//                        int ID = metaData.getInt("CHANNEL");
+//                        String[] stringArray = getResources().getStringArray(ID);
+//                        for (int i = 0; i < stringArray.length; i++) {
+//                            Log.e(TAG, stringArray[i]);
+//                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            // 忽略找不到包信息的异常
+        }
+        return channel;
+    }
 }

@@ -22,6 +22,19 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    // 渠道打包配置
+    flavorDimensions "xiaomi", "hooq"
+    productFlavors {
+        hooq {
+            manifestPlaceholders = [CHANNEL_VALUE: "hooq"]
+            dimension = "hooq"
+        }
+        xiaomi {
+            manifestPlaceholders = [CHANNEL_VALUE: "xiaomi"]
+            dimension = "xiaomi"
+        }
+    }
 }
 
 dependencies {

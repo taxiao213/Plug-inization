@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">PlugInization</string>
+
+    <string-array name="channel">
+        <item> xiaom</item>
+        <item> youmeng</item>
+    </string-array>
 </resources>
